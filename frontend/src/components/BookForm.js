@@ -8,6 +8,7 @@ const BookForm = () => {
     const [author, setAuthor] = useState('')
     const [description, setDescription] = useState('')
     const [error, setError] = useState(null)
+    const [emptyFields, setEmptyFields] = useState([])
    
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -25,12 +26,14 @@ const BookForm = () => {
 
         if (!response.ok) {
             setError(json.error)
+            setEmptyFields(json.emptyFields)
         }
         if (response.ok) {
             setTitle('')
             setAuthor('')
             setDescription('')
             setError(null)
+            setEmptyFields([])
             console.log('new book added', json)
             dispatch({type: 'CREATE_BOOK', payload: json})
         }
@@ -46,6 +49,7 @@ const BookForm = () => {
                 type="text"
                 onChange={(e)=> setTitle(e.target.value)}
                 value={title}
+                className={emptyFields.includes('title') ? 'error' : ''}
             />
 
             <label>Author:</label>
@@ -53,6 +57,7 @@ const BookForm = () => {
                 type="text"
                 onChange={(e)=> setAuthor(e.target.value)}
                 value={author}
+                className={emptyFields.includes('author') ? 'error' : ''}
             />
 
             <label>Description:</label>
@@ -60,6 +65,7 @@ const BookForm = () => {
                 type="text"
                 onChange={(e)=> setDescription(e.target.value)}
                 value={description}
+                className={emptyFields.includes('description') ? 'error' : ''}
             />
 
             <button>Add Book</button>
